@@ -3,13 +3,13 @@
 # For debugging
 # NVIM_PYTHON_LOG_FILE=nvim.log NVIM_PYTHON_LOG_LEVEL=INFO nvim
 
-from cm import get_src, register_source
+from cm import get_src, register_source, getLogger
 register_source(name='cm-tern',
                    priority=9,
                    abbreviation='Js',
                    scoping=True,
                    scopes=['javascript','javascript.jsx'],
-                   cm_refresh_patterns=[r'[\w_]{2,}$',r'\.[\w_]*$'],
+                   cm_refresh_patterns=[r'([\w\$]{3,})$',r'\.([\w\$]*)$'],
                    detach=1)
 
 import os
@@ -23,7 +23,7 @@ from urllib import request
 import json
 import cm
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 class Tern:
 
@@ -98,12 +98,8 @@ class Source:
     def cm_refresh(self,info,ctx,*args):
 
         lnum = ctx['lnum']
-        col = ctx['col']
         typed = ctx['typed']
         path = ctx['filepath']
-
-        kwtyped = re.search(r'[0-9a-zA-Z_]*?$',typed).group(0)
-        startcol = col-len(kwtyped)
 
         src = get_src(self._nvim,ctx)
 
@@ -126,6 +122,6 @@ class Source:
             matches.append(item)
 
         # cm#complete(src, context, startcol, matches)
-        ret = self._nvim.call('cm#complete', info['name'], ctx, startcol, matches)
+        ret = self._nvim.call('cm#complete', info['name'], ctx, ctx['startcol'], matches)
         logger.info('matches %s, ret %s', matches, ret)
 
