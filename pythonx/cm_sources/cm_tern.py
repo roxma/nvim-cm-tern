@@ -9,7 +9,7 @@ register_source(name='cm-tern',
                    abbreviation='Js',
                    scoping=True,
                    scopes=['javascript','javascript.jsx'],
-                   cm_refresh_patterns=[r'([\w\$]{3,})$',r'\.([\w\$]*)$'],
+                   cm_refresh_patterns=[r'\.[\w\$]*$'],
                    detach=1)
 
 import os
