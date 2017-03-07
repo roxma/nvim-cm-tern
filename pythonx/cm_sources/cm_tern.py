@@ -22,13 +22,17 @@ import logging
 from urllib import request
 import json
 import cm
+import platform
 
 logger = getLogger(__name__)
 
 class Tern:
 
     def __init__(self,bin):
-        proc = subprocess.Popen([bin, '--persistent'],
+        args = [bin, '--persistent']
+        if platform.system().lower()=='windows':
+            args.insert(0,'node')
+        proc = subprocess.Popen(args,
                                 stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                 stderr=subprocess.DEVNULL
         )
