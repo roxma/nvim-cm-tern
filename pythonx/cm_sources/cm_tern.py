@@ -3,7 +3,7 @@
 # For debugging
 # NVIM_PYTHON_LOG_FILE=nvim.log NVIM_PYTHON_LOG_LEVEL=INFO nvim
 
-from cm import get_src, register_source, getLogger
+from cm import register_source, getLogger, Base
 register_source(name='cm-tern',
                    priority=9,
                    abbreviation='Js',
@@ -89,11 +89,11 @@ class Tern:
           return None
 
 
-class Source:
+class Source(Base):
 
     def __init__(self,nvim):
+        super(Source,self).__init__(nvim)
 
-        self._nvim = nvim
         logger.info('eval for tern: %s', 'split(globpath(&rtp,"node_modules/tern/bin/tern",1),"\\n")[0]')
         path = nvim.eval('split(globpath(&rtp,"node_modules/tern/bin/tern",1),"\\n")[0]')
         self._tern = Tern(path)
@@ -105,7 +105,7 @@ class Source:
         typed = ctx['typed']
         path = ctx['filepath']
 
-        src = get_src(self._nvim,ctx)
+        src = self.get_src(ctx)
 
         completions = self._tern.completions(src,lnum-1,len(typed),path)
         logger.info('completions %s, typed[%s], %s', completions,typed,ctx)
@@ -126,6 +126,6 @@ class Source:
             matches.append(item)
 
         # cm#complete(src, context, startcol, matches)
-        ret = self._nvim.call('cm#complete', info['name'], ctx, ctx['startcol'], matches)
+        ret = self.nvim.call('cm#complete', info['name'], ctx, ctx['startcol'], matches)
         logger.info('matches %s, ret %s', matches, ret)
 
