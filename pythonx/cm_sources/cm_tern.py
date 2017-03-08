@@ -79,10 +79,10 @@ class Tern:
 
       try:
           payload = json.dumps(doc).encode('utf-8')
-          logger.error('payload: %s', payload)
+          logger.info('payload: %s', payload)
           req = self._opener.open("http://localhost:" + str(self._port) + "/", payload)
           result = req.read().decode('utf-8')
-          logger.error('result: %s', result)
+          logger.info('result: %s', result)
           return json.loads(result)
       except Exception as ex:
           logger.exception('exception: %s, %s', ex, doc)
