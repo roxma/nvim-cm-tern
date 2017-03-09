@@ -149,9 +149,6 @@ class Source(Base):
                         logger.error("failed to process snippet for item: %s, param: %s", item, param)
                         break
                     name = param.split(':')[0]
-                    if param.find('?')>=0:
-                        # optional
-                        break
                     snip_params.append("${%s:%s}" % (num,name))
                     num += 1
 
