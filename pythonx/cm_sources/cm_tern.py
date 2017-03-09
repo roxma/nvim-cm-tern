@@ -116,14 +116,46 @@ class Source(Base):
         matches = []
 
         for complete in completions['completions']:
-            
+
+            # {
+            #     "name": "copyWithin",
+            #     "type": "fn(target: number, start: number, end?: number)",
+            #     "doc": "The copyWithin() method copies the sequence of array elements within the array to the position starting at target.",
+            #     "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/copyWithin"
+            # }
+ 
             item = dict(word=complete['name'],
                         icase=1,
                         dup=1,
                         menu=complete.get('type',''),
                         info=complete.get('doc',''),
                         )
+
             matches.append(item)
+
+            # snippet support
+            if 'type' in complete:
+                m = re.search(r'fn\((.*?)\)',complete['type'])
+                if not m:
+                    continue
+                params = m.group(1)
+                params = params.split(',')
+                logger.info('snippet params: %s',params)
+                snip_params = []
+                num = 1
+                for param in params:
+                    param = param.strip()
+                    if not param:
+                        logger.error("failed to process snippet for item: %s, param: %s", item, param)
+                        break
+                    name = param.split(':')[0]
+                    if param.find('?')>=0:
+                        # optional
+                        break
+                    snip_params.append("${%s:%s}" % (num,name))
+                    num += 1
+
+                item['snippet'] = item['word'] + '(' + ", ".join(snip_params) + ')${0}'
 
         # cm#complete(src, context, startcol, matches)
         ret = self.nvim.call('cm#complete', info['name'], ctx, ctx['startcol'], matches)
