@@ -155,7 +155,12 @@ class Source(Base):
                     snip_params.append("${%s:%s}" % (num,name))
                     num += 1
 
-                item['snippet'] = item['word'] + '(' + ", ".join(snip_params) + ')${0}'
+                optional = ''
+                if not snip_params and params:
+                    # There's optional args, don't jump out of parentheses
+                    optional = '${1}'
+
+                item['snippet'] = item['word'] + '(' + ", ".join(snip_params) + optional + ')${0}'
 
         # cm#complete(src, context, startcol, matches)
         ret = self.nvim.call('cm#complete', info['name'], ctx, ctx['startcol'], matches)
