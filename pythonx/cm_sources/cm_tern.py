@@ -32,6 +32,12 @@ class Tern:
         args = [bin, '--persistent']
         if platform.system().lower()=='windows':
             args.insert(0,'node')
+        elif platform.system().lower()=='linux':
+            # nodejs no ubuntu
+            import shutil
+            nodejs = shutil.which('nodejs')
+            if nodejs:
+                args.insert(0,nodejs)
         proc = subprocess.Popen(args,
                                 stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                 stderr=subprocess.DEVNULL
