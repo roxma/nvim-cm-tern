@@ -33,7 +33,7 @@ class Tern:
         if platform.system().lower()=='windows':
             args.insert(0,'node')
         elif platform.system().lower()=='linux':
-            # nodejs no ubuntu
+            # nodejs on ubuntu
             import shutil
             nodejs = shutil.which('nodejs')
             if nodejs:
