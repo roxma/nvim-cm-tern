@@ -29,7 +29,7 @@ logger = getLogger(__name__)
 class Tern:
 
     def __init__(self,bin):
-        args = [bin, '--persistent']
+        args = [bin, '--persistent', '--no-port-file']
         if platform.system().lower()=='windows':
             args.insert(0,'node')
         elif platform.system().lower()=='linux':
