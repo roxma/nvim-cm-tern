@@ -10,7 +10,8 @@ register_source(name='cm-tern',
                    scoping=True,
                    scopes=['javascript','javascript.jsx'],
                    early_cache=1,
-                   cm_refresh_patterns=[r'\.[\w\$]*$'],)
+                   word_pattern=r'[\w$\-]+',
+                   cm_refresh_patterns=[r'\.'],)
 
 import os
 import re
