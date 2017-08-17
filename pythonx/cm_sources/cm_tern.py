@@ -11,7 +11,7 @@ register_source(name='cm-tern',
                    scopes=['javascript','javascript.jsx'],
                    early_cache=1,
                    word_pattern=r'[\w$\-]+',
-                   cm_refresh_patterns=[r'\.'],)
+                   cm_refresh_patterns=[r'\.', r'''require\s*\(\s*['"][^)'"]*'''],)
 
 import os
 import re
@@ -167,6 +167,6 @@ class Source(Base):
                 item['snippet'] = item['word'] + '(' + ", ".join(snip_params) + optional + ')${0}'
 
         # cm#complete(src, context, startcol, matches)
-        ret = self.nvim.call('cm#complete', info['name'], ctx, ctx['startcol'], matches)
+        ret = self.nvim.call('cm#complete', info['name'], ctx, completions['start']['ch']+1, matches)
         logger.info('matches %s, ret %s', matches, ret)
 
