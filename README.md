@@ -17,6 +17,6 @@ at the plugin base directory.
 ## Tips
 
 Read the [configuration section](http://ternjs.net/doc/manual.html#configuration)
-of the Tern Reference Manual. Create `.tern-project` in your porject directory
+of the Tern Reference Manual. Create `.tern-project` in your project directory
 or simply create `.tern-config` in your $HOME directory.
 
